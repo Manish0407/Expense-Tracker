@@ -1,0 +1,31 @@
+<h1>Expense</h1>
+
+<p><strong>Description:</strong> <%= @expense.description %></p>
+<p><strong>Paid by:</strong> <%= @expense.paid_by.name %></p>
+<p><strong>Date:</strong> <%= @expense.spent_on %></p>
+<p><strong>Tax:</strong> <%= @expense.tax_amount %></p>
+
+<h3>Participants</h3>
+<ul>
+  <% @expense.participants.each do |u| %>
+    <li><%= u.name %></li>
+  <% end %>
+</ul>
+
+<h3>Items</h3>
+<ul>
+  <% @expense.expense_items.each do |item| %>
+    <li>
+      <%= item.name %> - <%= item.amount %> (<%= item.split_type %>)
+    </li>
+  <% end %>
+</ul>
+
+<h3>Ledger Entries Created</h3>
+<ul>
+  <% LedgerEntry.where(source_type: "Expense", source_id: @expense.id).each do |le| %>
+    <li><%= le.from_user.name %> owes <%= le.to_user.name %>: <%= le.amount %></li>
+  <% end %>
+</ul>
+
+<p><%= link_to "Back to expenses", expenses_path %></p>

@@ -34,6 +34,10 @@ class Expense < ApplicationRecord
     shares
   end
 
+  def total_amount
+    expense_items.sum(:amount).to_d + tax_amount.to_d
+  end
+
   private
 
   def create_ledger_entries!

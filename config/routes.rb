@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'expenses/new'
+  get 'expenses/create'
+  get 'expenses/index'
+  get 'expenses/show'
   # get 'users/index'
   # get 'users/show'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -11,4 +15,6 @@ Rails.application.routes.draw do
   # root "posts#index"
   root "users#index"
   resources :users, only: [:index, :show]
+
+  resources :expenses, only: [:new, :create, :index, :show]
 end

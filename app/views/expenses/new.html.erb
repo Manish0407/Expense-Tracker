@@ -1,0 +1,75 @@
+<h1>Share an Expense</h1>
+
+<% if @expense.errors.any? %>
+  <div style="color:red;">
+    <h3><%= @expense.errors.count %> errors:</h3>
+    <ul>
+      <% @expense.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @expense do |f| %>
+  <div>
+    <%= f.label :paid_by_id, "Paid by" %><br/>
+    <%= f.collection_select :paid_by_id, @users, :id, :name %>
+  </div>
+
+  <div>
+    <%= f.label :description %><br/>
+    <%= f.text_field :description %>
+  </div>
+
+  <div>
+    <%= f.label :spent_on %><br/>
+    <%= f.date_field :spent_on %>
+  </div>
+
+  <div>
+    <%= f.label :tax_amount, "Tax (split equally)" %><br/>
+    <%= f.number_field :tax_amount, step: "0.01" %>
+  </div>
+
+  <hr/>
+
+  <h3>Participants</h3>
+  <%= f.fields_for :expense_participants do |p| %>
+    <div>
+      <%= p.collection_select :user_id, @users, :id, :name %>
+    </div>
+  <% end %>
+
+  <hr/>
+
+  <h3>Item (for now only 1 item)</h3>
+  <%= f.fields_for :expense_items do |item_fields| %>
+    <div>
+      <%= item_fields.label :name %><br/>
+      <%= item_fields.text_field :name %>
+    </div>
+
+    <div>
+      <%= item_fields.label :amount %><br/>
+      <%= item_fields.number_field :amount, step: "0.01" %>
+    </div>
+
+    <div>
+      <%= item_fields.label :split_type %><br/>
+      <%= item_fields.select :split_type, ExpenseItem.split_types.keys.map { |k| [k, k] } %>
+    </div>
+
+    <h4>Who had / shared this item?</h4>
+    <%= item_fields.fields_for :expense_item_assignments do |a| %>
+      <div>
+        <%= a.collection_select :user_id, @users, :id, :name %>
+        <%= a.label :share_amount, "Share amount (optional for unequal)" %>
+        <%= a.number_field :share_amount, step: "0.01" %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <br/>
+  <%= f.submit "Create Expense" %>
+<% end %>
