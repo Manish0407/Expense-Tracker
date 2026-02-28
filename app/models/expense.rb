@@ -38,6 +38,10 @@ class Expense < ApplicationRecord
     expense_items.sum(:amount).to_d + tax_amount.to_d
   end
 
+  def self.total_spent
+    all.includes(:expense_items).sum { |e| e.total_amount }
+  end
+  
   private
 
   def create_ledger_entries!

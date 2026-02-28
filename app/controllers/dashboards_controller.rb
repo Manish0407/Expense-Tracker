@@ -10,5 +10,6 @@ class DashboardsController < ApplicationController
     @friends_owe_me = @me.friends_who_owe_you
 
     @my_expenses = Expense.where(paid_by_id: @me.id).order(created_at: :desc)
+    @total_spent_by_all = Expense.all.sum { |e| e.total_amount }
   end
 end
