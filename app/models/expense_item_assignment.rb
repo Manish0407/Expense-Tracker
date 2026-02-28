@@ -7,7 +7,7 @@ class ExpenseItemAssignment < ApplicationRecord
   private
 
   def share_amount_positive_if_present
-    return if share_amount.blank?
+    return if share_amount.nil? || share_amount == ""
     errors.add(:share_amount, "must be > 0") if share_amount.to_d <= 0
   end
 end

@@ -52,7 +52,14 @@ class ExpenseItem < ApplicationRecord
     if shared?
       errors.add(:base, "Shared item must have at least 1 person") if assigns.empty?
 
-      if assigns.any? { |x| x.share_amount.present? }
+      has_any = assigns.any? { |x| x.share_amount.present? }
+      has_all = assigns.all? { |x| x.share_amount.present? }
+
+      if has_any && !has_all
+        errors.add(:base, "Provide share_amount for all or none (for equal split)")
+      end
+
+      if has_all
         total = assigns.sum { |x| (x.share_amount || 0).to_d }
         errors.add(:base, "Unequal shares must sum to item amount") if total != amount.to_d
       end
