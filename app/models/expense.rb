@@ -8,7 +8,7 @@ class Expense < ApplicationRecord
 
   accepts_nested_attributes_for :expense_participants, allow_destroy: true
   accepts_nested_attributes_for :expense_items, allow_destroy: true
-
+  
   validates :paid_by, presence: true
   validate :must_have_participants
   validate :must_have_items

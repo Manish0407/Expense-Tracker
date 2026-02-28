@@ -2,12 +2,6 @@ class ExpensesController < ApplicationController
   def new
     @expense = Expense.new(paid_by: current_user, spent_on: Date.today, tax_amount: 0)
     @users = User.order(:name)
-
-    # default: include John + one item + one assignment
-    @expense.expense_participants.build(user: current_user)
-
-    item = @expense.expense_items.build(name: "Item 1", amount: 0, split_type: :shared)
-    item.expense_item_assignments.build(user: current_user)
   end
 
   def create

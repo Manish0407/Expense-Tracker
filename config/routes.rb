@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'payments/new'
+  get 'payments/create'
   get 'dashboards/show'
   get 'expenses/new'
   get 'expenses/create'
@@ -19,4 +21,5 @@ Rails.application.routes.draw do
   resources :users, only: [:index, :show]
 
   resources :expenses, only: [:new, :create, :index, :show]
+  resources :payments, only: [:new, :create]
 end
