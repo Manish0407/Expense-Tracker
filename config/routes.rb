@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'dashboards/show'
   get 'expenses/new'
   get 'expenses/create'
   get 'expenses/index'
@@ -13,7 +14,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  root "users#index"
+  # root "users#index"
+  root "dashboards#show"
   resources :users, only: [:index, :show]
 
   resources :expenses, only: [:new, :create, :index, :show]

@@ -1,0 +1,62 @@
+<h1>Dashboard - <%= @me.name %></h1>
+
+<h2>Summary</h2>
+<ul>
+  <li><strong>Total balance:</strong> <%= @total_balance %></li>
+  <li><strong>Total you owe:</strong> <%= @total_you_owe %></li>
+  <li><strong>Total due to you:</strong> <%= @total_due_to_you %></li>
+</ul>
+
+<hr/>
+
+<h2>Friends you owe</h2>
+<% if @friends_i_owe.any? %>
+  <ul>
+    <% @friends_i_owe.each do |friend_id, amount| %>
+      <% friend = User.find(friend_id) %>
+      <li>
+        You owe <strong><%= friend.name %></strong>: <%= amount %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>You don’t owe anyone 🎉</p>
+<% end %>
+
+<h2>Friends who owe you</h2>
+<% if @friends_owe_me.any? %>
+  <ul>
+    <% @friends_owe_me.each do |friend_id, amount| %>
+      <% friend = User.find(friend_id) %>
+      <li>
+        <strong><%= friend.name %></strong> owes you: <%= amount %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No one owes you right now.</p>
+<% end %>
+
+<hr/>
+
+<h2>My Expenses (Paid by me)</h2>
+<% if @my_expenses.any? %>
+  <ul>
+    <% @my_expenses.each do |exp| %>
+      <li>
+        <%= link_to(exp.description.presence || "Expense ##{exp.id}", expense_path(exp)) %>
+        — Total: <%= exp.total_amount %>
+        — Date: <%= exp.spent_on %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No expenses created by you yet.</p>
+<% end %>
+
+<hr/>
+<p>
+  <%= link_to "Share Expense", new_expense_path %> |
+  <%= link_to "All Expenses", expenses_path %> |
+  <%= link_to "All Users", users_path %>
+</p>
