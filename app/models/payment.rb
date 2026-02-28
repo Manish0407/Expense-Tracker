@@ -9,10 +9,10 @@ class Payment < ApplicationRecord
   private
 
   # reverse entry to reduce paid_by's debt to paid_to
-  def create_settlement_ledger_entry!
+   def create_settlement_ledger_entry!
     LedgerEntry.create!(
-      from_user_id: paid_to_id,
-      to_user_id: paid_by_id,
+      from_user_id: paid_by_id,
+      to_user_id: paid_to_id,
       amount: amount,
       source_type: "Payment",
       source_id: id

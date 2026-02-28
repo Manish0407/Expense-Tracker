@@ -10,8 +10,8 @@ RSpec.describe Payment, type: :model do
     le = LedgerEntry.find_by(source_type: "Payment", source_id: payment.id)
 
     expect(le).to be_present
-    expect(le.from_user_id).to eq(alice.id) # reverse direction
-    expect(le.to_user_id).to eq(john.id)
+    expect(le.from_user_id).to eq(john.id)
+    expect(le.to_user_id).to eq(alice.id)
     expect(le.amount).to eq(40.to_d)
   end
 end
