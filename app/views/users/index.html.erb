@@ -1,0 +1,16 @@
+<h1>All Users</h1>
+
+<ul>
+  <% @users.each do |user| %>
+    <li>
+      <%= link_to user.name, user_path(user) %>
+      (<%= user.email %>)
+    </li>
+  <% end %>
+</ul>
+<hr/>
+<p>
+  <%= link_to "Dashboard", root_path %> |
+  <%= link_to "All Expenses", expenses_path %> |
+  <%= link_to "Share Expense", new_expense_path %>
+</p>

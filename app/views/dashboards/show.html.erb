@@ -1,0 +1,101 @@
+<div class="container">
+  <div class="page-title">
+    <h1>Dashboard — <%= @me.name %></h1>
+    <div class="badge">Last updated: <%= Time.zone.now.strftime("%d %b %Y, %I:%M %p") %></div>
+  </div>
+
+  <div class="card">
+    <h2>Summary</h2>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="label">Total balance</div>
+        <div class="value"><%= @total_balance %></div>
+      </div>
+
+      <div class="kpi">
+        <div class="label">Total you owe</div>
+        <div class="value"><%= @total_you_owe %></div>
+      </div>
+
+      <div class="kpi">
+        <div class="label">Total due to you</div>
+        <div class="value"><%= @total_due_to_you %></div>
+      </div>
+
+      <div class="kpi">
+        <div class="label">Total spent by all users</div>
+        <div class="value"><%= @total_spent_by_all %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="card">
+      <h2>Friends you owe</h2>
+
+      <% if @friends_i_owe.any? %>
+        <ul class="list">
+          <% @friends_i_owe.each do |friend_id, amount| %>
+            <% friend = User.find(friend_id) %>
+            <li>
+              <span class="name"><%= friend.name %></span>
+              <span class="amount">You owe: <strong><%= amount %></strong></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty">You don’t owe anyone 🎉</p>
+      <% end %>
+    </div>
+
+    <div class="card">
+      <h2>Friends who owe you</h2>
+
+      <% if @friends_owe_me.any? %>
+        <ul class="list">
+          <% @friends_owe_me.each do |friend_id, amount| %>
+            <% friend = User.find(friend_id) %>
+            <li>
+              <span class="name"><%= friend.name %></span>
+              <span class="amount">Owes you: <strong><%= amount %></strong></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty">No one owes you right now.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>My Expenses (Paid by me)</h2>
+
+    <% if @my_expenses.any? %>
+      <ul class="list">
+        <% @my_expenses.each do |exp| %>
+          <li>
+            <span>
+              <%= link_to(exp.description.presence || "Expense ##{exp.id}", expense_path(exp), class: "name") %>
+              <div class="muted"><%= exp.spent_on %></div>
+            </span>
+
+            <span class="amount"><strong><%= exp.total_amount %></strong></span>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="empty">No expenses created by you yet.</p>
+    <% end %>
+  </div>
+
+  <div class="card">
+    <h2>Quick actions</h2>
+    <div class="actions">
+      <%= link_to "Share Expense", new_expense_path, class: "btn primary" %>
+      <%= link_to "All Expenses", expenses_path, class: "btn" %>
+      <%= link_to "All Users", users_path, class: "btn" %>
+      <%= link_to "Settle Up", new_payment_path, class: "btn" %>
+    </div>
+  </div>
+</div>

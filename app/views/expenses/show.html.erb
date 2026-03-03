@@ -1,0 +1,100 @@
+<div class="container">
+  <div class="page-title">
+    <h1>Expense Details</h1>
+    <div class="badge">
+      Paid by: <strong><%= @expense.paid_by.name %></strong>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Summary</h2>
+
+    <ul class="list">
+      <li>
+        <span class="name">Description</span>
+        <span class="amount"><%= @expense.description.presence || "—" %></span>
+      </li>
+
+      <li>
+        <span class="name">Date</span>
+        <span class="amount"><%= @expense.spent_on %></span>
+      </li>
+
+      <li>
+        <span class="name">Tax</span>
+        <span class="amount"><%= @expense.tax_amount %></span>
+      </li>
+
+      <li>
+        <span class="name">Total</span>
+        <span class="amount"><strong><%= @expense.total_amount %></strong></span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="split">
+    <div class="card">
+      <h2>Participants</h2>
+
+      <% if @expense.participants.any? %>
+        <ul class="list">
+          <% @expense.participants.each do |u| %>
+            <li>
+              <span class="name"><%= u.name %></span>
+              <span class="muted">Participant</span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty">No participants.</p>
+      <% end %>
+    </div>
+
+    <div class="card">
+      <h2>Items</h2>
+
+      <% if @expense.expense_items.any? %>
+        <ul class="list">
+          <% @expense.expense_items.each do |item| %>
+            <li>
+              <span>
+                <span class="name"><%= item.name %></span>
+                <div class="muted"><%= item.split_type %></div>
+              </span>
+              <span class="amount"><strong><%= item.amount %></strong></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty">No items.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Ledger Entries Created</h2>
+
+    <% ledger_entries = LedgerEntry.where(source_type: "Expense", source_id: @expense.id) %>
+
+    <% if ledger_entries.any? %>
+      <ul class="list">
+        <% ledger_entries.each do |le| %>
+          <li>
+            <span class="name"><%= le.from_user.name %> owes <%= le.to_user.name %></span>
+            <span class="amount"><strong><%= le.amount %></strong></span>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="empty">No ledger entries found.</p>
+    <% end %>
+  </div>
+
+  <div class="card">
+    <h2>Actions</h2>
+    <div class="actions">
+      <%= link_to "Back to expenses", expenses_path, class: "btn" %>
+      <%= link_to "Dashboard", root_path, class: "btn primary" %>
+    </div>
+  </div>
+</div>
