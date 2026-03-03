@@ -10,15 +10,8 @@ RSpec.describe User, type: :model do
     alice = create(:user, name: "Alice", email: "alice_net@example.com")
     bob   = create(:user, name: "Bob",   email: "bob_net@example.com")
 
-    LedgerEntry.create!(
-      from_user: bob,
-      to_user: alice,
-      amount: 560,
-      source_type: "Expense",
-      source_id: 1
-    )
-
-    expect(alice.net_with(bob.id)).to eq(560.to_d)
+    LedgerEntry.create!(from_user: alice, to_user: bob, amount: 560, source_type: "Expense", source_id: 1)
+    expect(alice.net_with(bob.id)).to eq(-560.to_d)
 
     Payment.create!(paid_by: alice, paid_to: bob, amount: 560, notes: "settle")
 

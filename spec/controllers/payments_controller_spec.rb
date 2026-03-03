@@ -10,6 +10,8 @@ RSpec.describe PaymentsController, type: :controller do
 
   describe "GET #new" do
     it "assigns a new payment" do
+      # current_user owes other_user 100
+      LedgerEntry.create!(from_user: current_user, to_user: other_user, amount: 100, source_type: "Expense", source_id: 1)
       get :new
       expect(response).to have_http_status(:ok)
       expect(assigns(:payment)).to be_a_new(Payment)
@@ -19,6 +21,7 @@ RSpec.describe PaymentsController, type: :controller do
 
   describe "POST #create" do
     it "creates payment with current_user as payer" do
+      LedgerEntry.create!(from_user: current_user, to_user: other_user, amount: 100, source_type: "Expense", source_id: 1)
       expect {
         post :create, params: {
           payment: {
