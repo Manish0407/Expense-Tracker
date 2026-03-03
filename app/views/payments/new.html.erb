@@ -49,9 +49,8 @@
           step="0.01"
           name="payment[amount]"
           data-settle-target="amount"
-          oninput="if(this.max && parseFloat(this.value) > parseFloat(this.max)) this.value = this.max;"
+          data-action="input->settle#validate change->settle#validate"
         />
-
         <p class="muted" style="margin-top:6px;">
           You cannot pay more than the pending due.
         </p>
@@ -65,7 +64,7 @@
     </div>
 
     <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
-      <%= f.submit "Settle", class: "btn primary" %>
+      <%= f.submit "Settle", class: "btn primary", data: { settle_target: "submit" } %>
       <%= link_to "Back to Dashboard", root_path, class: "btn" %>
     </div>
   <% end %>

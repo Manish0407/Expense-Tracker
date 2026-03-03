@@ -1,5 +1,5 @@
 <template id="participant-template">
-  <div class="nested-row">
+  <div class="nested-row participant">
     <div class="nested-fields">
       <label class="mini-label">Participant</label>
       <select class="input" name="expense[expense_participants_attributes][NEW_INDEX][user_id]">
@@ -9,19 +9,19 @@
       </select>
     </div>
 
-    <button type="button" class="btn danger" data-action="click->nested#remove">Remove</button>
+    <button type="button" class="btn danger js-remove">Remove</button>
   </div>
 </template>
 
 <template id="item-template">
-  <div class="nested-card item">
+  <div class="nested-card item" data-item-index="NEW_INDEX">
     <div class="nested-card-header">
       <div>
         <div class="nested-title">Item</div>
         <div class="muted">Add name, amount and split type</div>
       </div>
 
-      <button type="button" class="btn danger" data-action="click->nested#remove">Remove item</button>
+      <button type="button" class="btn danger js-remove">Remove item</button>
     </div>
 
     <div class="nested-grid">
@@ -37,11 +37,7 @@
 
       <div class="nested-fields">
         <label class="mini-label">Split type</label>
-        <select
-          class="input"
-          name="expense[expense_items_attributes][NEW_INDEX][split_type]"
-          data-action="change->nested#toggleAssignments"
-        >
+        <select class="input js-split-type" name="expense[expense_items_attributes][NEW_INDEX][split_type]">
           <option value="shared" selected>shared</option>
           <option value="assigned">assigned</option>
         </select>
@@ -52,19 +48,21 @@
       </div>
     </div>
 
-    <div class="assignment-ui" data-nested-target="assignmentUI">
+    <div class="assignment-ui">
       <div class="nested-subheader">
         <div class="nested-title">Assignments</div>
-        <button type="button" class="btn" data-action="click->nested#addAssignment">+ Add assignment</button>
+        <button type="button" class="btn js-add-assignment is-disabled" disabled>
+          + Add assignment
+        </button>
       </div>
 
-      <div class="assignments" data-nested-target="assignments"></div>
+      <div class="assignments"></div>
     </div>
   </div>
 </template>
 
 <template id="assignment-template">
-  <div class="nested-row assignment-row">
+  <div class="nested-row assignment">
     <div class="nested-fields">
       <label class="mini-label">Person</label>
       <select class="input" name="expense[expense_items_attributes][ITEM_INDEX][expense_item_assignments_attributes][NEW_INDEX][user_id]">
@@ -74,16 +72,6 @@
       </select>
     </div>
 
-    <div class="nested-fields">
-      <label class="mini-label">Share amount (optional)</label>
-      <input
-        class="input"
-        type="number"
-        step="0.01"
-        placeholder="Leave blank for equal split"
-        name="expense[expense_items_attributes][ITEM_INDEX][expense_item_assignments_attributes][NEW_INDEX][share_amount]" />
-    </div>
-
-    <button type="button" class="btn danger" data-action="click->nested#remove">Remove</button>
+    <button type="button" class="btn danger js-remove">Remove</button>
   </div>
 </template>

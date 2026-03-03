@@ -16,8 +16,7 @@
 
   <%= render "templates" %>
 
-  <%= form_with model: @expense, data: { controller: "nested" }, class: "card form-card" do |f| %>
-
+  <%= form_with model: @expense, class: "card form-card", id: "expense-form" do |f| %>
     <div class="form-grid">
 
       <div class="form-group">
@@ -46,20 +45,16 @@
 
     <div class="section">
       <h2>Participants</h2>
-      <div data-nested-target="participants"></div>
-      <button type="button" data-action="click->nested#addParticipant" class="btn">
-        + Add participant
-      </button>
+      <div id="participants"></div>
+      <button type="button" id="add-participant" class="btn">+ Add participant</button>
     </div>
 
     <hr class="divider"/>
 
     <div class="section">
       <h2>Items</h2>
-      <div data-nested-target="items"></div>
-      <button type="button" data-action="click->nested#addItem" class="btn">
-        + Add item
-      </button>
+      <div id="items"></div>
+      <button type="button" id="add-item" class="btn">+ Add item</button>
     </div>
 
     <div style="margin-top:20px;">
