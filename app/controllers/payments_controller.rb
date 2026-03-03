@@ -2,6 +2,7 @@ class PaymentsController < ApplicationController
   def new
     @payment = Payment.new
     @users = User.where.not(id: current_user.id).order(:name)
+    @max_payable_by_user = current_user.friends_you_owe
   end
 
   def create

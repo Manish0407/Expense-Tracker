@@ -1,36 +1,72 @@
-<h1>Settle Up</h1>
-
-<% if @payment.errors.any? %>
-  <div style="color:red;">
-    <ul>
-      <% @payment.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-
-<%= form_with model: @payment do |f| %>
-  <div>
-    <%= f.label :paid_to_id, "Pay to" %><br/>
-    <%= f.collection_select :paid_to_id, @users, :id, :name, prompt: "Select a friend" %>
+<div class="container">
+  <div class="page-title">
+    <h1>Settle Up</h1>
+    <div class="badge">Record a payment to clear dues</div>
   </div>
 
-  <div>
-    <%= f.label :amount %><br/>
-    <%= f.number_field :amount, step: "0.01" %>
-  </div>
+  <% if @payment.errors.any? %>
+    <div class="card" style="border:1px solid #fca5a5; background:#fef2f2;">
+      <h2 style="color:#b91c1c;">Please fix the following errors:</h2>
+      <ul class="list">
+        <% @payment.errors.full_messages.each do |msg| %>
+          <li style="color:#b91c1c;"><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-  <div>
-    <%= f.label :notes %><br/>
-    <%= f.text_area :notes, rows: 3 %>
-  </div>
+  <%= form_with model: @payment, class: "card form-card" do |f| %>
+    <div data-controller="settle" class="form-grid">
 
-  <br/>
-  <%= f.submit "Record Payment" %>
-<% end %>
+      <div class="form-group">
+        <%= f.label :paid_to_id, "Pay to" %>
+        <select
+          class="input"
+          name="payment[paid_to_id]"
+          data-settle-target="paidTo"
+          data-action="change->settle#autofill"
+        >
+          <option value="">Select a friend</option>
 
-<hr/>
-<p>
-  <%= link_to "Back to Dashboard", root_path %>
-</p>
+          <% @users.each do |u| %>
+            <% max = (@max_payable_by_user[u.id] || 0).to_d %>
+            <option value="<%= u.id %>" data-max="<%= max %>">
+              <%= u.name %> (You owe: <%= max %>)
+            </option>
+          <% end %>
+        </select>
+
+        <p class="muted" style="margin-top:6px;">
+          Selecting a friend will auto-fill the exact amount you owe.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :amount %>
+        <input
+          class="input"
+          type="number"
+          step="0.01"
+          name="payment[amount]"
+          data-settle-target="amount"
+          oninput="if(this.max && parseFloat(this.value) > parseFloat(this.max)) this.value = this.max;"
+        />
+
+        <p class="muted" style="margin-top:6px;">
+          You cannot pay more than the pending due.
+        </p>
+      </div>
+
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <%= f.label :notes %>
+        <%= f.text_area :notes, rows: 3, class: "input" %>
+      </div>
+
+    </div>
+
+    <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+      <%= f.submit "Settle", class: "btn primary" %>
+      <%= link_to "Back to Dashboard", root_path, class: "btn" %>
+    </div>
+  <% end %>
+</div>

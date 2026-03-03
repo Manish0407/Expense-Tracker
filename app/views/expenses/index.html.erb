@@ -1,37 +1,60 @@
-<h1>All Expenses</h1>
+<div class="container">
+  <div class="page-title">
+    <h1>All Expenses</h1>
+    <div>
+      <%= link_to "Share New Expense", new_expense_path, class: "btn primary" %>
+    </div>
+  </div>
 
-<p>
-  <%= link_to "Share New Expense", new_expense_path %>
-</p>
+  <% if @expenses.any? %>
+    <div class="card">
+      <div class="table-wrapper">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Paid By</th>
+              <th>Total</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
 
-<% if @expenses.any? %>
-  <table border="1" cellpadding="8">
-    <thead>
-      <tr>
-        <th>Description</th>
-        <th>Paid By</th>
-        <th>Total Amount</th>
-        <th>Date</th>
-        <th>View</th>
-      </tr>
-    </thead>
+          <tbody>
+            <% @expenses.each do |expense| %>
+              <tr>
+                <td>
+                  <div class="name">
+                    <%= expense.description.presence || "No description" %>
+                  </div>
+                </td>
 
-    <tbody>
-      <% @expenses.each do |expense| %>
-        <tr>
-          <td><%= expense.description %></td>
-          <td><%= expense.paid_by.name %></td>
-          <td>
-            <%= expense.total_amount %>
-          </td>
-          <td><%= expense.spent_on %></td>
-          <td>
-            <%= link_to "Show", expense_path(expense) %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No expenses yet.</p>
-<% end %>
+                <td>
+                  <span class="muted"><%= expense.paid_by.name %></span>
+                </td>
+
+                <td>
+                  <strong class="amount"><%= expense.total_amount %></strong>
+                </td>
+
+                <td>
+                  <span class="muted"><%= expense.spent_on %></span>
+                </td>
+
+                <td>
+                  <%= link_to "View", expense_path(expense), class: "btn small" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% else %>
+    <div class="card empty">
+      <h2>No expenses yet</h2>
+      <p class="muted">Start by sharing your first expense.</p>
+      <%= link_to "Share Expense", new_expense_path, class: "btn primary" %>
+    </div>
+  <% end %>
+</div>

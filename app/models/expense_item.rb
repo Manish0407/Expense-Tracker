@@ -22,19 +22,30 @@ class ExpenseItem < ApplicationRecord
       { a.user_id => amount.to_d }
 
     when "shared"
-      return {} if assigns.empty?
+      # If assignments are present → use them
+      if assigns.any?
+        has_all = assigns.all? { |x| x.share_amount.present? }
 
-      if assigns.any? { |x| x.share_amount.present? }
-        # unequal: use share_amount
-        assigns.to_h { |x| [x.user_id, x.share_amount.to_d] }
+        if has_all
+          return assigns.to_h { |x| [x.user_id, x.share_amount.to_d] }
+        else
+          user_ids = assigns.map(&:user_id)
+        end
       else
-        # equal
-        per = (amount.to_d / assigns.size).round(2)
-        shares = assigns.to_h { |x| [x.user_id, per] }
-        remainder = amount.to_d - (per * assigns.size)
-        shares[assigns.first.user_id] += remainder if remainder != 0
-        shares
+        # If no assignments → use expense participants
+        user_ids = expense.expense_participants.pluck(:user_id)
       end
+
+      return {} if user_ids.blank?
+
+      per = (amount.to_d / user_ids.size).round(2)
+      shares = user_ids.index_with { per }
+
+      remainder = amount.to_d - (per * user_ids.size)
+      shares[user_ids.first] += remainder if remainder != 0
+
+      shares
+
     else
       {}
     end
@@ -47,22 +58,6 @@ class ExpenseItem < ApplicationRecord
 
     if assigned?
       errors.add(:base, "Assigned item must have exactly 1 person") if assigns.size != 1
-    end
-
-    if shared?
-      errors.add(:base, "Shared item must have at least 1 person") if assigns.empty?
-
-      has_any = assigns.any? { |x| x.share_amount.present? }
-      has_all = assigns.all? { |x| x.share_amount.present? }
-
-      if has_any && !has_all
-        errors.add(:base, "Provide share_amount for all or none (for equal split)")
-      end
-
-      if has_all
-        total = assigns.sum { |x| (x.share_amount || 0).to_d }
-        errors.add(:base, "Unequal shares must sum to item amount") if total != amount.to_d
-      end
     end
   end
 end

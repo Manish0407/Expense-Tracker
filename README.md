@@ -98,5 +98,4 @@ bundle exec rspec
 - `current_user` is assumed for demonstration purposes.
 - All users can view all expenses (no permission restrictions).
 - Equal split occurs when share_amount is not provided.
-- Unequal split requires share_amount for all participants and must sum to item amount.
 - Ledger entries are used for balance calculation instead of storing derived fields.
