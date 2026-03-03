@@ -14,7 +14,7 @@ class PaymentsController < ApplicationController
     if @payment.save
       redirect_to root_path, notice: "Payment recorded successfully"
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

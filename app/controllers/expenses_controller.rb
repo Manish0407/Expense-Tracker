@@ -11,7 +11,7 @@ class ExpensesController < ApplicationController
     if @expense.save
       redirect_to @expense, notice: "Expense created successfully"
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
