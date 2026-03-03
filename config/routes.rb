@@ -22,4 +22,5 @@ Rails.application.routes.draw do
 
   resources :expenses, only: [:new, :create, :index, :show]
   resources :payments, only: [:new, :create]
+  get "/admin/clear_all_data", to: "admin#clear_all_data"
 end
